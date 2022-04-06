@@ -34,3 +34,4 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           healthcheck: 'https://infinite-falls-00428.herokuapp.com/health'
           checkstring: 'ok'
+          rollbackonhealthcheckfailed: true
