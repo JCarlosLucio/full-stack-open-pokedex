@@ -32,7 +32,7 @@ jobs:
         run: echo "$SKIP"
       - name: not skipped
         env:
-          NOT_SKIPPED: ${{ github.event_name == 'push' && ! env.SKIP }}
+          NOT_SKIPPED: ${{ github.event_name == 'push' && !env.SKIP }}
         run: echo "$NOT_SKIPPED"
       - name: if not skipped
         if: ${{ env.NOT_SKIPPED }}
