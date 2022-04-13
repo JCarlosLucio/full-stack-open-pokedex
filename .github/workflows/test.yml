@@ -24,9 +24,9 @@ jobs:
         run: echo "$COMMIT_MESSAGES"
       - name: joined commit messages
         env:
-          JOINED_MESSAGES: ${{ join(github.event.commits.*.message, ' ') }}
+          JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
         run: echo "$JOINED_MESSAGES"
       - name: contains skip
         env:
-          SKIPPED: ${{ contains(env.JOINED_MESSAGES, '#skip') }}
-        run: echo "$SKIPPED"
+          SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
+        run: echo "$SKIP"
