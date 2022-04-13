@@ -30,3 +30,7 @@ jobs:
         env:
           SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
         run: echo "$SKIP"
+      - name: not skipped
+        env:
+          NOT_SKIPPED: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
+        run: echo "$NOT_SKIPPED"
