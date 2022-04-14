@@ -30,15 +30,11 @@ jobs:
         env:
           CONTAINS_SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
           IS_PUSH: ${{ github.event_name == 'push' }}
-          DEPLOY: ${{ (github.event_name == 'push' && ! contains(join(github.event.commits.*.message), '#skip')) }}
+          SHOULD_DEPLOY:
+            ${{ (github.event_name == 'push' && ! contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
-          if ${CONTAINS_SKIP} == true; then
-            echo "deploy=false" >> $GITHUB_ENV
-            echo "deploy set to false"
-          else
-            echo "deploy=${IS_PUSH}" >> $GITHUB_ENV
-            echo "deploy set to ${IS_PUSH}"
-          fi
+          echo "deploy=${SHOULD_DEPLOY}" >> $GITHUB_ENV
+          echo "deploy set to ${SHOULD_DEPLOY}"
       - name: deploy if true
-        if: env.DEPLOY
+        if: env.deploy
         run: echo "I should deploy and tag"
