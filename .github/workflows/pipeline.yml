@@ -16,12 +16,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - name: should deploy and tag if not '#skip'
-        env:
-          NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
-        run: |
-          echo "DEPLOY_AND_TAG=${NOT_SKIP}" >> $GITHUB_ENV
-          echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
       - name: npm install
         run: npm install
       - name: lint
@@ -37,7 +31,7 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
       - uses: akhileshns/heroku-deploy@v3.12.12
-        if: env.DEPLOY_AND_TAG == 'true'
+        if: github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'infinite-falls-00428'
@@ -54,7 +48,7 @@ jobs:
           fetch-depth: 0
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@ce4b5ffa38e072fa7a901e417253c438fcc2ccce
-        if: env.DEPLOY_AND_TAG == 'true'
+        if: github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
