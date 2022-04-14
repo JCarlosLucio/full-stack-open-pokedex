@@ -33,8 +33,8 @@ jobs:
           SHOULD_DEPLOY:
             ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
-          echo "flag=${SHOULD_DEPLOY}" >> $GITHUB_ENV
-          echo "flag set to ${SHOULD_DEPLOY}"
+          echo "deploy=${SHOULD_DEPLOY}" >> $GITHUB_ENV
+          echo "deploy set to ${SHOULD_DEPLOY}"
       - name: deploy if true
-        if: env.SHOULD_DEPLOY == 'true'
+        if: env.deploy == 'true'
         run: echo "I should deploy and tag"
