@@ -1,0 +1,37 @@
+name: Testing stuff
+
+on:
+  push:
+    branches:
+      - test-workflow
+
+jobs:
+  a_test_job:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: gihub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: commits
+        env:
+          COMMITS: ${{ toJson(github.event.commits) }}
+        run: echo "$COMMITS"
+      - name: commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
+      - name: joined commit messages
+        env:
+          JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
+        run: echo "$JOINED_MESSAGES"
+      - name: should deploy and tag if not '#skip'
+        env:
+          NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
+        run: |
+          echo "DEPLOY_AND_TAG=${NOT_SKIP}" >> $GITHUB_ENV
+          echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
+      - name: deploy if true
+        if: env.DEPLOY_AND_TAG == 'true'
+        run: echo "I deploy and tag"
