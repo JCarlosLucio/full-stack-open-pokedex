@@ -8,6 +8,8 @@ on:
 jobs:
   test_job_1:
     runs-on: ubuntu-20.04
+    # set outputs for reusing data from one job on other jobs
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idoutputs
     outputs:
       deploy_and_tag: ${{ steps.simple_deploy.outputs.deploy }}
     steps:
@@ -25,7 +27,7 @@ jobs:
           echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
           echo "::set-output name=deploy::${NOT_SKIP}"
       - name: deploy if true
-        if: env.DEPLOY_AND_TAG == 'true'
+        if: github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')
         run: echo "I deploy"
   test_job_2:
     needs: [test_job_1]
@@ -36,6 +38,7 @@ jobs:
         env:
           TEST_DEPLOY_AND_TAG: ${{ needs.test_job_1.outputs.deploy_and_tag }}
         run: echo "deploy and tag output < ${TEST_DEPLOY_AND_TAG} >"
+        # here is the deploy_and_tag output reused
       - name: use deploy and tag env
         if: ${{ needs.test_job_1.outputs.deploy_and_tag == 'true' }}
         run: echo "I tag"
