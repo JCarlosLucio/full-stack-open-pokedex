@@ -39,5 +39,5 @@ jobs:
           echo "push=${IS_PUSH}" >> $GITHUB_ENV
           echo "set push to ${IS_PUSH}"
       - name: if not skipped
-        if: env.push && ! env.skip
+        if: env.push && !env.skip
         run: echo "I should deploy and tag"
