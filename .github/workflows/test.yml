@@ -33,9 +33,9 @@ jobs:
       - name: not skipped
         env:
           NOT_SKIPPED: ${{ github.event_name == 'push' && env.SKIP == 0 }}
-          SKIP_FALSE_BOOL: ${{ env.SKIP == 0 }}
+          SKIP_FALSE_BOOL: ${{ env.SKIP }}
           SKIP_FALSE_STR: ${{ env.SKIP == '0' }}
         run: echo "not skipped < $NOT_SKIPPED > | false bool < $SKIP_FALSE_BOOL > | false str < $SKIP_FALSE_STR >"
       - name: if not skipped
-        if: ${{ github.event_name == 'push' && env.SKIP == 0 }}
+        if: ${{ github.event_name == 'push' && env.SKIP }}
         run: echo "I should deploy and tag"
