@@ -41,5 +41,5 @@ jobs:
               echo "skip set to ${IS_PUSH}"
             fi
       - name: if not skipped
-        if: env.skip
+        if: !env.skip
         run: echo "I should deploy and tag"
