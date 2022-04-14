@@ -40,4 +40,4 @@ jobs:
           echo "set push to ${IS_PUSH}"
       - name: if not skipped
         if: ${{ env.push && ! env.skip }}
-        run: echo "I deploy and tag"
+        run: echo "I should deploy and tag"
