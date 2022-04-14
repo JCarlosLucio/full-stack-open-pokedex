@@ -30,10 +30,10 @@ jobs:
         env:
           NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
-          echo "deploy_and_tag=${NOT_SKIP}" >> $GITHUB_ENV
-          echo "deploy_and_tag set to ${NOT_SKIP}"
+          echo "DEPLOY_AND_TAG=${NOT_SKIP}" >> $GITHUB_ENV
+          echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
       - name: deploy if true
-        if: env.deploy_and_tag == 'true'
+        if: env.DEPLOY_AND_TAG == 'true'
         run: echo "I will deploy and tag"
       # - name: should deploy and tag
       #   env:
