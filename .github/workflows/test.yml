@@ -34,7 +34,7 @@ jobs:
           echo "deploy_and_tag set to ${NOT_SKIP}"
       - name: deploy if true
         if: env.deploy_and_tag == 'true'
-        run: echo "I deploy and tag"
+        run: echo "I will deploy and tag"
       # - name: should deploy and tag
       #   env:
       #     SHOULD_DEPLOY_AND_TAG:
