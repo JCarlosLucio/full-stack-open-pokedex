@@ -31,10 +31,10 @@ jobs:
           CONTAINS_SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
           IS_PUSH: ${{ github.event_name == 'push' }}
           SHOULD_DEPLOY:
-            ${{ (github.event_name == 'push' && ! contains(join(github.event.commits.*.message), '#skip')) }}
+            ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
           echo "flag=${SHOULD_DEPLOY}" >> $GITHUB_ENV
           echo "flag set to ${SHOULD_DEPLOY}"
       - name: deploy if true
-        if: env.flag
+        if: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: echo "I should deploy and tag"
