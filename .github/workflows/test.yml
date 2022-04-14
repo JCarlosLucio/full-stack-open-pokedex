@@ -11,12 +11,12 @@ jobs:
     outputs:
       deploy_and_tag: ${{ steps.simple_deploy.outputs.deploy }}
     steps:
-      - id: simple_deploy
       - uses: actions/checkout@v2
       - name: joined commit messages
         env:
           JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
         run: echo "$JOINED_MESSAGES"
+      - id: simple_deploy
       - name: should deploy and tag if not '#skip'
         env:
           NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
