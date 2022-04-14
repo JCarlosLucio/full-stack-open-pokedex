@@ -39,5 +39,5 @@ jobs:
             echo "deploy set to ${IS_PUSH}"
           fi
       - name: deploy if true
-        if: env.deploy
+        if: ${{ env.deploy }}
         run: echo "I deploy and tag"
