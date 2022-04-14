@@ -22,6 +22,7 @@ jobs:
           NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
           echo "DEPLOY_AND_TAG=${NOT_SKIP}" >> $GITHUB_ENV
+          echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
           echo "::set-output name=deploy::${NOT_SKIP}"
       - name: deploy if true
         if: env.DEPLOY_AND_TAG == 'true'
@@ -30,6 +31,7 @@ jobs:
     needs: [test_job_1]
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v2
       - name: deploy_and_tag output
         env:
           TEST_DEPLOY_AND_TAG: ${{ needs.test_job_1.outputs.deploy_and_tag }}
