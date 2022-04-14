@@ -26,15 +26,13 @@ jobs:
         env:
           JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
         run: echo "$JOINED_MESSAGES"
-      - name: contains skip
+      - name: should deploy and tag
         env:
-          CONTAINS_SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
-          IS_PUSH: ${{ github.event_name == 'push' }}
-          SHOULD_DEPLOY:
+          SHOULD_DEPLOY_AND_TAG:
             ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
-          echo "deploy=${SHOULD_DEPLOY}" >> $GITHUB_ENV
-          echo "deploy set to ${SHOULD_DEPLOY}"
+          echo "deploy_and_tag=${SHOULD_DEPLOY_AND_TAG}" >> $GITHUB_ENV
+          echo "deploy_and_tag set to ${SHOULD_DEPLOY_AND_TAG}"
       - name: deploy if true
-        if: env.deploy == 'true'
+        if: env.deploy_and_tag == 'true'
         run: echo "I deploy and tag"
