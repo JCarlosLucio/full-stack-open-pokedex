@@ -37,4 +37,4 @@ jobs:
           echo "flag set to ${SHOULD_DEPLOY}"
       - name: deploy if true
         if: env.flag == 'true'
-        run: echo "I should deploy and tag"
+        run: echo "I deploy and tag"
