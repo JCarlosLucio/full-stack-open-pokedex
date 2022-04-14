@@ -28,13 +28,13 @@ jobs:
         run: echo "$JOINED_MESSAGES"
       - name: contains skip
         env:
-          SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
+          SKIP: ${{ ! contains(join(github.event.commits.*.message), '#skip') }}
         run: echo "$SKIP"
       - name: not skipped
         env:
-          NOT_SKIPPED: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
-          SKIP_FALSE: ${{ env.SKIP == 'false' }}
+          NOT_SKIPPED: ${{ github.event_name == 'push' && env.SKIP }}
+          SKIP_FALSE: ${{ env.SKIP }}
         run: echo " not skipped < $NOT_SKIPPED > | skip is false < $SKIP_FALSE >"
       - name: if not skipped
-        if: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
+        if: ${{ github.event_name == 'push' && env.SKIP }}
         run: echo "I should deploy and tag"
