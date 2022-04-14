@@ -26,13 +26,22 @@ jobs:
         env:
           JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
         run: echo "$JOINED_MESSAGES"
-      - name: should deploy and tag
+      - name: should deploy and tag if not skip
         env:
-          SHOULD_DEPLOY_AND_TAG:
-            ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
+          NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
-          echo "deploy_and_tag=${SHOULD_DEPLOY_AND_TAG}" >> $GITHUB_ENV
-          echo "deploy_and_tag set to ${SHOULD_DEPLOY_AND_TAG}"
+          echo "deploy_and_tag=${NOT_SKIP}" >> $GITHUB_ENV
+          echo "deploy_and_tag set to ${NOT_SKIP}"
       - name: deploy if true
         if: env.deploy_and_tag == 'true'
         run: echo "I deploy and tag"
+      # - name: should deploy and tag
+      #   env:
+      #     SHOULD_DEPLOY_AND_TAG:
+      #       ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
+      #   run: |
+      #     echo "deploy_and_tag=${SHOULD_DEPLOY_AND_TAG}" >> $GITHUB_ENV
+      #     echo "deploy_and_tag set to ${SHOULD_DEPLOY_AND_TAG}"
+      # - name: deploy if true
+      #   if: env.deploy_and_tag == 'true'
+      #   run: echo "I deploy and tag"
