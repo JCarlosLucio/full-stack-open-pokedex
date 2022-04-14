@@ -31,15 +31,13 @@ jobs:
           CONTAINS_SKIP: ${{ contains(join(github.event.commits.*.message), '#skip') }}
           IS_PUSH: ${{ github.event_name == 'push' }}
         run: |
-          echo "skip=(${IS_PUSH} == true && ${CONTAINS_SKIP} == true)" >> $GITHUB_ENV
-          echo "set skip to (${IS_PUSH} == true && ${CONTAINS_SKIP} == true)"
-            if ${CONTAINS_SKIP} == true; then
-              echo "skip=true" >> $GITHUB_ENV
-              echo "skip set to true"
-            else
-              echo "skip=${IS_PUSH}" >> $GITHUB_ENV
-              echo "skip set to ${IS_PUSH}"
-            fi
+          if ${CONTAINS_SKIP} == true; then
+            echo "skip=true" >> $GITHUB_ENV
+            echo "skip set to true"
+          else
+            echo "skip=${IS_PUSH}" >> $GITHUB_ENV
+            echo "skip set to ${IS_PUSH}"
+          fi
       - name: if not skipped
-        if: !env.skip
+        if: ! env.skip
         run: echo "I should deploy and tag"
