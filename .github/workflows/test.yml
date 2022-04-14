@@ -6,22 +6,13 @@ on:
       - test-workflow
 
 jobs:
-  a_test_job:
+  test_job_1:
     runs-on: ubuntu-20.04
+    outputs:
+      deploy_and_tag: ${{ steps.simple_deploy.outputs.deploy }}
     steps:
+      - id: simple_deploy
       - uses: actions/checkout@v2
-      - name: gihub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: commits
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
       - name: joined commit messages
         env:
           JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
@@ -31,7 +22,18 @@ jobs:
           NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
           echo "DEPLOY_AND_TAG=${NOT_SKIP}" >> $GITHUB_ENV
-          echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
+          echo "::set-output name=deploy::${NOT_SKIP}"
       - name: deploy if true
         if: env.DEPLOY_AND_TAG == 'true'
-        run: echo "I deploy and tag"
+        run: echo "I deploy"
+  test_job_2:
+    needs: [test_job_1]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: deploy_and_tag output
+        env:
+          TEST_DEPLOY_AND_TAG: ${{ needs.test_job_1.outputs.deploy_and_tag }}
+        run: echo "deploy and tag output < ${TEST_DEPLOY_AND_TAG} >"
+      - name: use deploy and tag env
+        if: ${{ needs.test_job_1.outputs.deploy_and_tag == 'true' }}
+        run: echo "I tag"
