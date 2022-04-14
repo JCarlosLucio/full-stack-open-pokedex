@@ -40,4 +40,4 @@ jobs:
           fi
       - name: deploy if true
         if: env.deploy
-        run: echo "I should deploy and tag"
+        run: echo "I deploy and tag"
