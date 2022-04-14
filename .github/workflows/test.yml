@@ -17,6 +17,7 @@ jobs:
           JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
         run: echo "$JOINED_MESSAGES"
       - id: simple_deploy
+        name: should deploy and tag if not '#skip'
         env:
           NOT_SKIP: ${{ (github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')) }}
         run: |
