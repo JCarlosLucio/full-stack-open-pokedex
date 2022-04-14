@@ -36,5 +36,5 @@ jobs:
           SKIP_FALSE: ${{ env.SKIP }}
         run: echo " not skipped < $NOT_SKIPPED > | skip is false < $SKIP_FALSE >"
       - name: if not skipped
-        if: ${{ github.event_name == 'push' && env.SKIP == 'false' }}
+        if: ${{ github.event_name == 'push' && env.SKIP == false }}
         run: echo "I should deploy and tag"
