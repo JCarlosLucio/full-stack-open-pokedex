@@ -32,12 +32,12 @@ jobs:
           IS_PUSH: ${{ github.event_name == 'push' }}
         run: |
           if ${CONTAINS_SKIP} == true; then
-            echo "skip=true" >> $GITHUB_ENV
-            echo "skip set to true"
+            echo "deploy=false" >> $GITHUB_ENV
+            echo "deploy set to false"
           else
-            echo "skip=${IS_PUSH}" >> $GITHUB_ENV
-            echo "skip set to ${IS_PUSH}"
+            echo "deploy=${IS_PUSH}" >> $GITHUB_ENV
+            echo "deploy set to ${IS_PUSH}"
           fi
       - name: if not skipped
-        if: env.skip == false
+        if: env.deploy
         run: echo "I should deploy and tag"
