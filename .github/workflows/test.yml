@@ -27,7 +27,7 @@ jobs:
           echo "DEPLOY_AND_TAG set to ${NOT_SKIP}"
           echo "::set-output name=deploy::${NOT_SKIP}"
       - name: deploy if true
-        if: github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')
+        if: env.DEPLOY_AND_TAG == 'true'
         run: echo "I should deploy"
   test_job_2:
     needs: [test_job_1]
