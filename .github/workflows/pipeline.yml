@@ -39,6 +39,14 @@ jobs:
           healthcheck: 'https://infinite-falls-00428.herokuapp.com/health'
           checkstring: 'ok'
           rollbackonhealthcheckfailed: true
+      - name: Build failure notification
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: failure()
+        with:
+          severity: error
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+          text: 'Build failed :sob:'
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
@@ -52,3 +60,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+      - name: New version notification
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: success() && github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip')
+        with:
+          severity: info
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+          description:
+            to https://infinite-falls-00428.herokuapp.com/ by ${{ github.event.commits[0].committer.username }}
+          text: 'A new version of Pokedex deployed :partying_face:'
