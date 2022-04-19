@@ -47,6 +47,9 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
           avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
           text: 'Build failed :sob:'
+          details:
+            commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }} broke the
+            build :(
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
