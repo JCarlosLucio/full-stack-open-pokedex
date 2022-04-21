@@ -2,8 +2,8 @@ name: Periodic Health Check
 
 on:
   schedule:
-    # every 10 minutes
-    - cron: '*/10 * * * *'
+    # every day at 09:00
+    - cron: '0 9 * * *'
 
 jobs:
   periodic_healthcheck:
